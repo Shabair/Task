@@ -4,14 +4,16 @@ import {
   useRecords,
   CellRenderer,
   Box,
-  initializeBlock,
+  useGlobalConfig,
 } from "@airtable/blocks/ui";
 
-const TABLE_NAME = "Design projects";
 const Task = () => {
   const base = useBase();
 
-  const table = base.getTableByNameIfExists(TABLE_NAME);
+  const globalConfig = useGlobalConfig();
+  const tableId = globalConfig.get("selectedTableId");
+
+  const table = base.getTableByIdIfExists(tableId);
 
   const queryResult = table.selectRecords();
 
@@ -19,7 +21,7 @@ const Task = () => {
   const records = useRecords(queryResult);
 
   const data = records.map((record) => {
-    return <SigleRecord record={record} table={table} />;
+    return <SigleRecord key={record.id} record={record} table={table} />;
   });
   return (
     <>
